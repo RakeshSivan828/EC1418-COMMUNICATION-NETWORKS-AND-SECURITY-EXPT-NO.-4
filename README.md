@@ -17,6 +17,27 @@ To create a Python program that utilizes the SHA-256 hashing algorithm for ensur
 7.	Compare both hash values.
 8.	If the hash values are the same, the data integrity is preserved.
 9.	If the hash values are different, the data has been modified.
+# PYTHON PROGRAM
+```
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import os
+plaintext = input("Enter plaintext: ")
+key_text = input("Enter 32-character key: ")
+key = key_text.encode()
+data = plaintext.encode()
+iv = os.urandom(16)
+padding = 16 - (len(data) % 16)
+data += bytes([padding]) * padding
+cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
+encryptor = cipher.encryptor()
+encrypted = encryptor.update(data) + encryptor.finalize()
+print("\nCiphertext (Hex):")
+print(" ".join(f"{byte:02x}" for byte in encrypted))
+print("\nAES-256 ENCRYPTION SUCCESS")
+```
+# OUTPUT :
+<img width="928" height="179" alt="image" src="https://github.com/user-attachments/assets/e08599b1-b23c-445f-bee9-2e17677d727d" />
+
 
 # Part B: Diffie-Hellman Key Exchange
 1.	Select a public prime number p and a generator g.
@@ -33,10 +54,37 @@ K₂ = Aᵇ mod p
 8.	Compare the two generated shared secret keys.
 9.	If both keys are equal, the Diffie-Hellman key exchange is successful.
 # PYTHON PROGRAM
+```
+p = 23
+g = 5
 
+print("\nPublic prime (p):", p)
+print("Public base (g):", g)
+
+user1_private = int(input("\nEnter Alice private key: "))
+user2_private = int(input("\nEnter Bob private key: "))
+
+user1_public = pow(g, user1_private, p)
+user2_public = pow(g, user2_private, p)
+
+print("\nAlice Public Key:", user1_public)
+print("Bob Public Key:", user2_public)
+
+user1_secret = pow(user2_public, user1_private, p)
+user2_secret = pow(user1_public, user2_private, p)
+
+print("\nAlice Shared Key:", user1_secret)
+print("Bob Shared Key:", user2_secret)
+
+if user1_secret == user2_secret:
+    print("\nKey Exchange Successful")
+else:
+    print("\nKey Exchange Failed")
+```
 
 # OUTPUT : 
- 
+ <img width="876" height="306" alt="Screenshot 2026-08-17 113434" src="https://github.com/user-attachments/assets/9d954b4a-f927-4917-9ed7-babaa7b24ae6" />
+
 # RESULT
 Thus, a Python program was successfully created and executed to verify data integrity using the SHA-256 hashing algorithm and to establish a shared secret key using the Diffie-Hellman key exchange protocol. 
 
